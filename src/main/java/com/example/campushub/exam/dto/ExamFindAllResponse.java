@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ExamFindAllResponse {
-    private Long id;          // 시험 ID
+    private String username;
+    private String userNum;
+    private String deptName;
     private Long userCourseId; // 과목 ID
     private int midScore;     // 중간고사 점수
     private int finalScore;   // 기말고사 점수
@@ -16,8 +18,11 @@ public class ExamFindAllResponse {
 
     @Builder
     @QueryProjection
-    public ExamFindAllResponse(Long id, Long userCourseId, int midScore, int finalScore, int totalScore) {
-        this.id = id;
+    public ExamFindAllResponse(String username, String userNum, String deptName,
+                                Long userCourseId, int midScore, int finalScore, int totalScore) {
+        this.username = username;
+        this.userNum = userNum;
+        this.deptName = deptName;
         this.userCourseId = userCourseId;
         this.midScore = midScore;
         this.finalScore = finalScore;

@@ -20,7 +20,7 @@ public class Tuition {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = LAZY)
+	@ManyToOne(cascade = CascadeType.PERSIST,fetch = LAZY)
 	@JoinColumn(name = "dept_id")
 	private Dept dept;
 

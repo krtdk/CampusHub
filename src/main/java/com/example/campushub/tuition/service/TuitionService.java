@@ -10,16 +10,13 @@ import com.example.campushub.user.domain.Type;
 import com.example.campushub.user.domain.User;
 import com.example.campushub.user.dto.LoginUser;
 import com.example.campushub.user.repository.UserRepository;
-import com.example.campushub.usertuition.domain.PaymentStatus;
 import com.example.campushub.usertuition.domain.UserTuition;
 import com.example.campushub.usertuition.repository.UserTuitionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +30,11 @@ public class TuitionService {
     // 등록금 생성
 
     // 등록금 전체 + 컨디션 조회
-//    public List<TuitionFindAllResponse> findTuitions(LoginUser loginUser, TuitionSearchCondition cond){
-//        // 1. ADMIN 인지 확인
-//        User user = userRepository.findByUserNumAndType(loginUser.getUserNum(), Type.ADMIN)
-//                .orElseThrow(UserNotFoundException::new);
-//        // 2. 조회
-//         return tuitionRepository.findAllByCondition(cond);
-//    }
+    public List<TuitionFindAllResponse> findTuitions(LoginUser loginUser, TuitionSearchCondition cond){
+        User user = userRepository.findByUserNumAndType(loginUser.getUserNum(), Type.ADMIN)
+                .orElseThrow(UserNotFoundException::new);
+         return tuitionRepository.findAllByCondition(cond);
+    }
 
     // 등록 여부 변경
     @Transactional
@@ -57,7 +52,7 @@ public class TuitionService {
         List<UserTuition> userTuitions = userTuitionRepository.findAllByUserIds(userIds);
 
         for (UserTuition userTuition : userTuitions) {
-            if (!userTuition.isSuccessPaymentStatus()) {
+            if (!userTuition.isWaitingPaymentStatus()) {
                 throw new IllegalArgumentException("ERROR");
             }
 
@@ -75,15 +70,11 @@ public class TuitionService {
                 .orElseThrow(UserNotFoundException::new);
 
         TuitionStudentResponse response = tuitionRepository.findStudentTuitionDetail(loginUser.getUserNum())
-                .orElseThrow(() -> {
-                    System.out.println("등록 정보를 찾을 수 없습니다. userNum: " + loginUser.getUserNum());
-                    return new TuitionNotFoundException();
-                });
-
+                .orElseThrow(TuitionNotFoundException::new);
         return response;
     }
 
-    // 등록금 납부(납부여부 변경 신청)
+    // 등록금 납부(납부여부 변경 신청 학생이 신청)
     @Transactional
     public void applyTuitionPayment(LoginUser loginUser, Long tuitionId) {
         User user = userRepository.findByUserNumAndType(loginUser.getUserNum(), Type.STUDENT)
@@ -94,5 +85,6 @@ public class TuitionService {
         if (!ut.isWaitPaymentStatus())
             throw new IllegalArgumentException("ERROR");
         ut.updatePaymentStatusToWait();
+
     }
 }

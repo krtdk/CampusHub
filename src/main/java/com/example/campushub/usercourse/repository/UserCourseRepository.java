@@ -1,4 +1,4 @@
-package com.example.campushub.usercourse.domain;
+package com.example.campushub.usercourse.repository;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -15,27 +15,24 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserCourse {
+public class UserCourseRepository {
 
-	@Id
-	@Column(name = "user_course_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @Column(name = "user_course_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "course_id")
-	private Course course;
-
-
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 }

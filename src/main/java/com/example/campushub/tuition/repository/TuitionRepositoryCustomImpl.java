@@ -24,22 +24,22 @@ public class TuitionRepositoryCustomImpl implements TuitionRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
     //관리자 등록금 조회
-//    @Override
-//        public List<TuitionFindAllResponse> findAllByCondition(TuitionSearchCondition cond) {
-//        return queryFactory.select(new QTuitionFindAllResponse(
-//                        user.userName,
-//                        user.userNum,
-//                        dept.deptName,
-//                        user.type.stringValue().as("userType"),
-//                        userTuition.paymentStatus.stringValue().as("paymentStatus"),
-//                        userTuition.paymentDate
-//                )).from(tuition)
-//                .join(userTuition).on(userTuition.tuition.eq(tuition))
-//                .join(user).on(userTuition.user.eq(user))
-//                .join(dept).on(user.dept.eq(dept))
-//                .where(eqDeptName(cond.getDeptName()), eqUserNum(cond.getUserNum()), eqPaymentStatus(cond.getPaymentStatus()))
-//                .fetch();
-//    }
+    @Override
+        public List<TuitionFindAllResponse> findAllByCondition(TuitionSearchCondition cond) {
+        return queryFactory.select(new QTuitionFindAllResponse(
+                        user.userName,
+                        user.userNum,
+                        dept.deptName,
+                        user.type.stringValue().as("userType"),
+                        userTuition.paymentStatus.stringValue().as("paymentStatus"),
+                        userTuition.paymentDate
+                )).from(tuition)
+                .join(userTuition).on(userTuition.tuition.eq(tuition))
+                .join(user).on(userTuition.user.eq(user))
+                .join(dept).on(user.dept.eq(dept))
+                .where(eqDeptName(cond.getDeptName()), eqUserNum(cond.getUserNum()), eqPaymentStatus(cond.getPaymentStatus()))
+                .fetch();
+    }
     //학생 등록금 조회
     @Override
     @Transactional
@@ -104,8 +104,8 @@ public class TuitionRepositoryCustomImpl implements TuitionRepositoryCustom {
         return userNum == null ? null : user.userNum.eq(userNum);
     }
 
-    private BooleanExpression eqPaymentStatus(String paymentStatus) {
-        return paymentStatus == null ? null : userTuition.paymentStatus.eq(PaymentStatus.of(paymentStatus));
+    private BooleanExpression eqPaymentStatus(PaymentStatus paymentStatus) {
+        return paymentStatus == null ? null : userTuition.paymentStatus.eq(paymentStatus);
     }
 
 

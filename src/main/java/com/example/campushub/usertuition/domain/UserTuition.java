@@ -3,7 +3,6 @@ package com.example.campushub.usertuition.domain;
 import static jakarta.persistence.FetchType.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import com.example.campushub.schoolyear.domain.SchoolYear;
 import com.example.campushub.tuition.domain.Tuition;
@@ -25,7 +24,7 @@ public class UserTuition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -58,11 +57,11 @@ public class UserTuition {
         this.paymentStatus = PaymentStatus.WAITING;
     }
     public boolean isWaitPaymentStatus() {
-        return this.paymentStatus == PaymentStatus.WAITING;
+        return this.paymentStatus == PaymentStatus.NONE;
     }
 
-    public boolean isSuccessPaymentStatus() {
-        return this.paymentStatus == PaymentStatus.SUCCESS;
+    public boolean isWaitingPaymentStatus() {
+        return this.paymentStatus == PaymentStatus.WAITING;
     }
 
 

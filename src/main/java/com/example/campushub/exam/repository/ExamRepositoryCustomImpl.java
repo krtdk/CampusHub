@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.example.campushub.dept.domain.QDept.dept;
 import static com.example.campushub.exam.domain.QExam.exam;
+import static com.example.campushub.user.domain.QUser.user;
+import static com.example.campushub.usercourse.domain.QUserCourse.userCourse;
 
 @RequiredArgsConstructor
 public class ExamRepositoryCustomImpl implements ExamRepositoryCustom {
@@ -21,14 +24,18 @@ public class ExamRepositoryCustomImpl implements ExamRepositoryCustom {
     @Override
     public List<ExamFindAllResponse> findExamScoresByUserCourseId(Long userCourseId) {
         return queryFactory.select(new QExamFindAllResponse(
-                        exam.id,
+                        user.userNum,
+                        user.userName,
+                        dept.deptName,
                         exam.userCourse.id,
                         exam.midScore,
                         exam.finalScore,
                         exam.totalScore
                 ))
                 .from(exam)
-                .where(eqUserCourseId(userCourseId))
+                .join(user).on(exam.userCourse.id.eq(userCourse.id)) // exam과 userCourse를 연결
+                .join(dept).on(user.dept.eq(dept)) // user와 dept를 연결
+                .where(eqUserCourseId(userCourseId)) // userCourseId 조건 추가
                 .fetch();
     }
 
@@ -46,6 +53,7 @@ public class ExamRepositoryCustomImpl implements ExamRepositoryCustom {
     }
 
     private BooleanExpression eqUserCourseId(Long userCourseId) {
-        return userCourseId == null ? null : exam.userCourse.id.eq(userCourseId);
+        return userCourseId != null ? exam.userCourse.id.eq(userCourseId) : null;
     }
+
 }

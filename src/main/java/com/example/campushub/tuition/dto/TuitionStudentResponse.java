@@ -44,17 +44,4 @@ public class TuitionStudentResponse {
         this.totalAmount = tuitionFee - scholarshipAmount;
         this.paymentStatus = paymentStatus;
     }
-    @Override
-    public String toString() {
-        return "TuitionStudentResponse{" +
-                "userNum='" + userNum + '\'' +
-                ", userName='" + userName + '\'' +
-                ", deptName='" + deptName + '\'' +
-                ", year='" + year + '\'' +
-                ", semester='" + semester + '\'' +
-                ", tuitionFee=" + tuitionFee +
-                ", scholarshipAmount=" + scholarshipAmount +
-                ", paymentStatus='" + paymentStatus + '\'' +
-                '}';
-    }
 }

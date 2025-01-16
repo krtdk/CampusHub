@@ -4,6 +4,9 @@ import com.example.campushub.exam.dto.ExamFindAllResponse;
 import com.example.campushub.exam.dto.ExamScoreInputRequest;
 import com.example.campushub.exam.dto.ExamScoreUpdateResponse;
 import com.example.campushub.exam.repository.ExamRepository;
+import com.example.campushub.global.error.exception.UserNotFoundException;
+import com.example.campushub.user.domain.Type;
+import com.example.campushub.user.domain.User;
 import com.example.campushub.user.dto.LoginUser;
 import com.example.campushub.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,13 +25,14 @@ public class ExamService {
     private final ExamRepository examRepository;
 
     public List<ExamFindAllResponse> getExamScores(LoginUser loginUser, Long userCourseId) {
-        validateUserRole(loginUser);
+        User user = userRepository.findByUserNumAndType(loginUser.getUserNum(), Type.STUDENT)
+                .orElseThrow(UserNotFoundException::new);
         return examRepository.findExamScoresByUserCourseId(userCourseId);
     }
 
     @Transactional
     public ExamScoreUpdateResponse updateExamScore(LoginUser loginUser, ExamScoreInputRequest request) {
-        validateUserRole(loginUser);
+        validateUserType(loginUser);
         examRepository.updateExamScore(request);
 
         // 총점 계산 후 응답 DTO 생성
@@ -40,9 +44,11 @@ public class ExamService {
                 .build();
     }
 
-    private void validateUserRole(LoginUser loginUser) {
-        if (!loginUser.getRole().equals("ADMIN") && !loginUser.getRole().equals("PROFESSOR")) {
+    private void validateUserType(LoginUser loginUser) {
+        if (!loginUser.getType().equals(Type.PROFESSOR)) {
             throw new SecurityException("권한이 없습니다.");
         }
     }
+
+
 }

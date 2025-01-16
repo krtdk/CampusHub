@@ -30,7 +30,7 @@ public class User {
     private LocalDateTime birthday;
 
     //학과 매핑
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = LAZY)
     @JoinColumn(name = "dept_id")
     private Dept dept;
 

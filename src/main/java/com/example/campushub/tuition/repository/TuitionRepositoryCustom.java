@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TuitionRepositoryCustom {
-//    List<TuitionFindAllResponse> findAllByCondition(TuitionSearchCondition cond);
+    List<TuitionFindAllResponse> findAllByCondition(TuitionSearchCondition cond);
     Optional<TuitionStudentResponse> findStudentTuitionDetail(String userNum);
     void updatePaymentStatusToWaiting(String userNum);
 }

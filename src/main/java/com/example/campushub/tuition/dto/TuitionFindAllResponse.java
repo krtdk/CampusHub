@@ -15,12 +15,12 @@ public class TuitionFindAllResponse {
     private String deptName;
     private String userType;
     private String paymentStatus;
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
     @Builder
     @QueryProjection
     public TuitionFindAllResponse(String username, String userNum, String deptName,
-                                  String userType, String paymentStatus, Date paymentDate) {
+                                  String userType, String paymentStatus, LocalDate paymentDate) {
         this.username = username;
         this.userNum = userNum;
         this.deptName = deptName;
